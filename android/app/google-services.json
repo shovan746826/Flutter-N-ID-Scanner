@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "457382884899",
+    "firebase_url": "https://ml-image-cab94.firebaseio.com",
+    "project_id": "ml-image-cab94",
+    "storage_bucket": "ml-image-cab94.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:457382884899:android:49da2cff588ec05bae2396",
+        "android_client_info": {
+          "package_name": "com.ars.login_scan_n_id"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "457382884899-mi9nfifdtd7iha04run5jjn84ung95r9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_Oz3WZw4_FfG95w1ATsQ3rosyvlqvo9c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "457382884899-mi9nfifdtd7iha04run5jjn84ung95r9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
