@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 
+import 'FilterData.dart';
+
 class ImageToText extends StatefulWidget {
   @override
   _ImageToTextState createState() => _ImageToTextState();
@@ -12,7 +14,7 @@ class ImageToText extends StatefulWidget {
 class _ImageToTextState extends State<ImageToText> {
 
   File pickedImage;
-  String textData="";
+  String userName="",userBirth="",userId="";
   bool isImageLoaded = false;
 
   //..........pick Image From Gallery.............
@@ -21,8 +23,14 @@ class _ImageToTextState extends State<ImageToText> {
     setState(() {
       pickedImage = File(file.path);
       isImageLoaded = true;
-      if(textData!=""){
-        textData="";
+      if(userName!=""){
+        userName="";
+      }
+      if(userBirth!=""){
+        userBirth="";
+      }
+      if(userId!=""){
+        userId="";
       }
     });
   }
@@ -33,10 +41,27 @@ class _ImageToTextState extends State<ImageToText> {
     setState(() {
       pickedImage = File(file.path);
       isImageLoaded = true;
-      if(textData!=""){
-        textData="";
+      if(userName!=""){
+        userName="";
+      }
+      if(userBirth!=""){
+        userBirth="";
+      }
+      if(userId!=""){
+        userId="";
       }
     });
+  }
+
+  //..........barcode Scan.............
+  Future decode() async {
+    FirebaseVisionImage ourImage = FirebaseVisionImage.fromFile(pickedImage);
+    BarcodeDetector barcodeDetector = FirebaseVision.instance.barcodeDetector();
+    List barCodes = await barcodeDetector.detectInImage(ourImage);
+
+    for (Barcode readableCode in barCodes) {
+      print("data--> ${readableCode.rawValue}");
+    }
   }
 
   //..........convert Image To Text.............
@@ -50,30 +75,12 @@ class _ImageToTextState extends State<ImageToText> {
       final readText = await textRecognizer.processImage(visionImage);
       await textRecognizer.close();
 
-      int count=0;
-      bool flag=false;
+      setState(() {
+        userName=FilterData.getName(readText);
+        userBirth=FilterData.getBirth(readText);
+        userId=FilterData.getNid(readText);
+      });
 
-      for (TextBlock block in readText.blocks) {
-        for (TextLine line in block.lines) {
-          for (TextElement word in line.elements) {
-            setState(() {
-              print("$count --> ${word.text}");
-              if(word.text.contains("Name")){
-                flag = true;
-                count=0;
-              }
-              if(count==3){
-                flag=false;
-                count=0;
-              }
-              if(flag && count > 0){
-                textData+=word.text+" ";
-              }
-              count++;
-            });
-          }
-        }
-      }
     }
   }
 
@@ -88,7 +95,7 @@ class _ImageToTextState extends State<ImageToText> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: <Widget>[
-              SizedBox(height: 100.0),
+              SizedBox(height: 20.0),
 
               Text("This Scanner Only Work BD N-ID",
                 style: TextStyle(
@@ -155,22 +162,31 @@ class _ImageToTextState extends State<ImageToText> {
 
               SizedBox(height: 16,),
 
-              Row(
-                children: [
-                  Text("Name:",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),),
+              Text("$userName",
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.deepPurple,
+                  fontWeight: FontWeight.bold,
+                ),),
 
-                  SizedBox(width: 8,),
+              SizedBox(height: 16,),
 
-                  Text("$textData",
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),),
-                ],
-              ),
+              Text("$userBirth",
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.deepPurple,
+                  fontWeight: FontWeight.bold,
+                ),),
+
+              SizedBox(height: 16,),
+
+              Text("$userId",
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.deepPurple,
+                  fontWeight: FontWeight.bold,
+                ),),
+
             ],
           ),
         )
